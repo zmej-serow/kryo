@@ -4,7 +4,7 @@ github:              "zmej-serow/kryo"
 license:             BSD3
 author:              "zmej"
 maintainer:          "zmej.serow@gmail.com"
-copyright:           "zmej"
+copyright:           "Andrej 'zmej' Serow"
 
 extra-source-files:
 - README.md
