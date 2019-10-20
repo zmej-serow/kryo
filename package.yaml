@@ -1,0 +1,53 @@
+name:                kryo
+version:             0.1.0.0
+github:              "zmej-serow/kryo"
+license:             BSD3
+author:              "zmej"
+maintainer:          "zmej.serow@gmail.com"
+copyright:           "zmej"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/zmej-serow/kryo#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- text
+- cmark
+- time
+- directory-tree
+- filepath
+
+library:
+  source-dirs: src
+
+executables:
+  kryo-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - kryo
+
+tests:
+  kryo-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - kryo
