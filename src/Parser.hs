@@ -22,7 +22,8 @@ getTags s =
 
 split :: Eq a => a -> [a] -> [[a]]
 split d [] = []
-split d s = x : split d (drop 1 y) where (x,y) = span (/= d) s
+split d list = x : split d (drop 1 y)
+  where (x,y) = span (/= d) list
 
 splitPath :: String -> [String] -- "azaza\\kokoko\\blabla\\filename.md" -> ["kokoko", "blabla"]
 splitPath = init . tail . split '\\'

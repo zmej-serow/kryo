@@ -1,6 +1,7 @@
 module Files
   ( buildSiteTree
   , renameMdToHtml
+  , makeSubstrate
   , Content
   ) where
 
@@ -11,6 +12,7 @@ import Data.Maybe
 import System.Directory.Tree
 import System.FilePath       (takeExtension, dropExtension)
 import Data.Time.Clock       (getCurrentTime)
+import qualified Data.ByteString as B
 
 type Content = Maybe (Data.Text.Text, Tags, DatePublished, DateOccured)
 
@@ -35,3 +37,14 @@ renameMdToHtml (File n cs) = File (rename n) (convertz cs)
           | otherwise                = n
         convertz = Data.Text.unpack . commonmarkToHtml [optSmart] . Data.Text.pack
 renameMdToHtml n = n
+
+makeSubstrate :: FilePath -> FilePath -> IO ()
+makeSubstrate from to = do
+  input <- readDirectoryWithL B.readFile from
+  -- TODO: обработать ошибки чтения. exception?
+  writeDirectoryWith B.writeFile $ to :/ filterDir noMd (dirTree input)
+  -- TODO: обработать ошибки записи. exception?
+  return ()
+  where noMd (Dir ('.':_) _) = True
+        noMd (File n _)      = takeExtension n /= ".md"
+        noMd _               = True

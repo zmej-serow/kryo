@@ -26,6 +26,7 @@ dependencies:
 - time
 - directory-tree
 - filepath
+- bytestring
 
 library:
   source-dirs: src
