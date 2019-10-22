@@ -14,8 +14,6 @@ main = do
   let pathOutput = args !! 1 --maybe some arg-parsing library later?
 
   makeSubstrate pathInput pathOutput
-
-  -- s <- readDirectoryWith B.readFile pathInput
   
   sourceTree <- buildSiteTree pathInput
   let treeWithPaths = zipPaths $ "" :/ dirTree sourceTree
@@ -27,9 +25,6 @@ main = do
   -- и так же можно фильтрануть только НЕ md. это будет дерево из гифов, пнг, джипегов и прочей лабуды.
   -- после этого по дереву можно пройтись функцией, которая будет копировать файлы из in в out.
   -- и потом останется только записать в out дерево со сконверченными html.
-
-  -- let ss = pathOutput :/ dirTree s
-  -- writeDirectoryWith B.writeFile ss
 
   writeDirectory $ pathOutput :/ siteDirHtml
   -- print siteDir

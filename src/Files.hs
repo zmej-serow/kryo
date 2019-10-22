@@ -12,7 +12,7 @@ import Data.Maybe
 import System.Directory.Tree
 import System.FilePath       (takeExtension, dropExtension)
 import Data.Time.Clock       (getCurrentTime)
-import qualified Data.ByteString as B
+import qualified Data.ByteString.Lazy as B
 
 type Content = Maybe (Data.Text.Text, Tags, DatePublished, DateOccured)
 
@@ -38,12 +38,16 @@ renameMdToHtml (File n cs) = File (rename n) (convertz cs)
         convertz = Data.Text.unpack . commonmarkToHtml [optSmart] . Data.Text.pack
 renameMdToHtml n = n
 
-makeSubstrate :: FilePath -> FilePath -> IO ()
+makeSubstrate :: FilePath -> FilePath -> IO () -- TODO: some logging must be. maybe, MissingH?
 makeSubstrate from to = do
   input <- readDirectoryWithL B.readFile from
-  -- TODO: обработать ошибки чтения. exception?
-  writeDirectoryWith B.writeFile $ to :/ filterDir noMd (dirTree input)
-  -- TODO: обработать ошибки записи. exception?
+  if not . successful $ dirTree input
+    then error "Reading source tree failed!"
+    else putStrLn "Reading source tree: OK!"
+  output <- writeDirectoryWith B.writeFile $ to :/ filterDir noMd (dirTree input)
+  if not . successful $ dirTree output
+    then error "Failed to write output tree!"
+    else putStrLn "Writing non-HTML files to output tree: OK!"
   return ()
   where noMd (Dir ('.':_) _) = True
         noMd (File n _)      = takeExtension n /= ".md"
