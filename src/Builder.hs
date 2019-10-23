@@ -1,5 +1,5 @@
 module Builder
-  ( createSitePage
+  ( applyTemplates
   ) where
 
 import           Files     (Content)
@@ -15,6 +15,6 @@ import qualified Data.Text           as T
 -- хедеры всех трёх типов у меня одинаковые. футеры тоже. но оставим возможность делать их разными.
 -- если в тулове раздела есть список -- рендерим его картинками-ссылками.
 
-createSitePage :: (FilePath, Content) -> String
-createSitePage (path, Just (c, t, p, o)) = cm
+applyTemplates :: (FilePath, Content) -> String
+applyTemplates (path, Just (c, t, p, o)) = cm
   where cm = T.unpack . T.append c $ T.pack $ concat $ splitPath path

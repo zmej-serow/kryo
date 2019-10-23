@@ -5,14 +5,14 @@ module Files
   , Content
   ) where
 
-import Parser
-import CMark                 (commonmarkToHtml, optSmart)
-import Data.Text             (Text, pack, unpack)
-import Data.Maybe
-import System.Directory.Tree
-import System.FilePath       (takeExtension, dropExtension)
-import Data.Time.Clock       (getCurrentTime)
-import qualified Data.ByteString.Lazy as B
+import           Parser
+import           CMark                 (commonmarkToHtml, optSmart)
+import           Data.Text             (Text, pack, unpack)
+import           Data.Maybe
+import           System.Directory.Tree
+import           System.FilePath       (takeExtension, dropExtension)
+import           Data.Time.Clock       (getCurrentTime)
+import qualified Data.ByteString.Lazy  as B
 
 type Content = Maybe (Data.Text.Text, Tags, DatePublished, DateOccured)
 
@@ -31,11 +31,10 @@ buildSiteTree :: FilePath -> IO (AnchoredDirTree Content)
 buildSiteTree = readDirectoryWith convertMd
 
 renameMdToHtml :: DirTree String -> DirTree String
-renameMdToHtml (File n cs) = File (rename n) (convertz cs)
+renameMdToHtml (File n cs) = File (rename n) cs
   where rename n
           | takeExtension n == ".md" = dropExtension n ++ ".html"
           | otherwise                = n
-        convertz = Data.Text.unpack . commonmarkToHtml [optSmart] . Data.Text.pack
 renameMdToHtml n = n
 
 makeSubstrate :: FilePath -> FilePath -> IO () -- TODO: some logging must be. maybe, MissingH?
@@ -48,7 +47,6 @@ makeSubstrate from to = do
   if not . successful $ dirTree output
     then error "Failed to write output tree!"
     else putStrLn "Writing non-HTML files to output tree: OK!"
-  return ()
   where noMd (Dir ('.':_) _) = True
         noMd (File n _)      = takeExtension n /= ".md"
         noMd _               = True
