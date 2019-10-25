@@ -20,9 +20,9 @@ main = do
   let siteDir = applyTemplates <$> filterDir onlyMd treeWithPaths
   let siteDirHtml = transformDir renameMdToHtml siteDir
 
-  output <- writeDirectory $ pathOutput :/ siteDirHtml  
+  output <- writeDirectoryWith writeFileUtf8 $ pathOutput :/ siteDirHtml
   if not . successful $ dirTree output
-    then error "Failed to add converted HTML files to output tree!" --разобраться, почему срабатывает эта ветка!
+    then error "Failed to add converted HTML files to output tree!"
     else putStrLn "Writing converted HTML files to output tree: OK!"
 
   where onlyMd (Dir ('.':_) _) = False

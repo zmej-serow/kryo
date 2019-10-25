@@ -16,5 +16,5 @@ import qualified Data.Text           as T
 -- если в тулове раздела есть список -- рендерим его картинками-ссылками.
 
 applyTemplates :: (FilePath, Content) -> String
-applyTemplates (path, Just (c, t, p, o)) = cm
-  where cm = T.unpack . T.append c $ T.pack $ concat $ splitPath path
+applyTemplates (path, Just (c, t, p, o)) = T.unpack c
+  -- where cm = T.unpack . T.append c $ T.pack "azaza" -- $ concat $ splitPath path

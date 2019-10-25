@@ -2,25 +2,39 @@ module Files
   ( buildSiteTree
   , renameMdToHtml
   , makeSubstrate
+  , writeFileUtf8
   , Content
   ) where
 
 import           Parser
-import           CMark                 (commonmarkToHtml, optSmart)
-import           Data.Text             (Text, pack, unpack)
-import           Data.Maybe
+import           CMark                      (commonmarkToHtml, optSmart)
+import qualified Data.Text             as T (Text, pack, unpack)
+import           System.IO
 import           System.Directory.Tree
-import           System.FilePath       (takeExtension, dropExtension)
-import           Data.Time.Clock       (getCurrentTime)
+import           System.FilePath            (takeExtension, dropExtension)
+import           Data.Time.Clock            (getCurrentTime)
 import qualified Data.ByteString.Lazy  as B
 
-type Content = Maybe (Data.Text.Text, Tags, DatePublished, DateOccured)
+type Content = Maybe (T.Text, Tags, DatePublished, DateOccured)
 
+writeFileUtf8 :: FilePath -> String -> IO () --TODO: error handling!
+writeFileUtf8 f s = do
+  h <- openFile f WriteMode
+  hSetEncoding h utf8
+  hPutStr h s
+  hClose h
+
+readFileUtf8 :: FilePath -> IO String
+readFileUtf8 f = do
+  h <- openFile f ReadMode
+  hSetEncoding h utf8
+  hGetContents h
+  
 convert :: FilePath -> IO Content
 convert filename = do
-  c <- readFile filename
+  c <- readFileUtf8 filename
   return $ Just (toHtml c, getTags c, getDatePublished c, getDateOccured c)
-  where toHtml = commonmarkToHtml [optSmart] . Data.Text.pack
+  where toHtml = commonmarkToHtml [optSmart] . T.pack
 
 convertMd :: FilePath -> IO Content
 convertMd filename
@@ -30,7 +44,7 @@ convertMd filename
 buildSiteTree :: FilePath -> IO (AnchoredDirTree Content)
 buildSiteTree = readDirectoryWith convertMd
 
-renameMdToHtml :: DirTree String -> DirTree String
+renameMdToHtml :: DirTree a -> DirTree a
 renameMdToHtml (File n cs) = File (rename n) cs
   where rename n
           | takeExtension n == ".md" = dropExtension n ++ ".html"
