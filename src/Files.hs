@@ -3,6 +3,7 @@ module Files
   , renameMdToHtml
   , makeSubstrate
   , writeFileUtf8
+  , readFileUtf8
   , Content
   ) where
 

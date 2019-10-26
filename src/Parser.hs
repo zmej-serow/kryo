@@ -6,6 +6,7 @@ module Parser
   , Tags
   , DateOccured
   , DatePublished
+  , Breadcrumbs
   ) where
 
 import Data.List       (isPrefixOf, isSuffixOf)
@@ -14,6 +15,7 @@ import Data.Time       (UTCTime, parseTimeOrError, defaultTimeLocale)
 type Tags          = [String]
 type DatePublished = UTCTime
 type DateOccured   = UTCTime
+type Breadcrumbs   = [String]
 
 getTags :: String -> Tags
 getTags s =
@@ -25,7 +27,7 @@ split d [] = []
 split d list = x : split d (drop 1 y)
   where (x,y) = span (/= d) list
 
-splitPath :: String -> [String] -- "azaza\\kokoko\\blabla\\filename.md" -> ["kokoko", "blabla"]
+splitPath :: FilePath -> Breadcrumbs -- "azaza\\kokoko\\blabla\\filename.md" -> ["kokoko", "blabla"]
 splitPath = init . tail . split '\\'
 
 isSpecialLine :: String -> String -> Bool

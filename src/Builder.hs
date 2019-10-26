@@ -16,5 +16,8 @@ import qualified Data.Text           as T
 -- если в тулове раздела есть список -- рендерим его картинками-ссылками.
 
 applyTemplates :: (FilePath, Content) -> String
-applyTemplates (path, Just (c, t, p, o)) = T.unpack c
-  -- where cm = T.unpack . T.append c $ T.pack "azaza" -- $ concat $ splitPath path
+applyTemplates (f, c) = applyTemplates' (splitPath f, c)
+
+applyTemplates' :: (Breadcrumbs, Content) -> String
+applyTemplates' ([], Just (c, t, p, o))   = "main page" ++ T.unpack c
+applyTemplates' (path, Just (c, t, p, o)) = "inner page" ++ T.unpack c
