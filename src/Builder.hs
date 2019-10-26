@@ -15,9 +15,9 @@ import Data.Text
 -- хедеры всех трёх типов у меня одинаковые. футеры тоже. но оставим возможность делать их разными.
 -- если в тулове раздела есть список -- рендерим его картинками-ссылками.
 
-applyTemplates :: (FilePath, Content) -> String
+applyTemplates :: (FilePath, Content) -> Text
 applyTemplates (f, c) = applyTemplates' (splitPath f, c)
 
-applyTemplates' :: (Breadcrumbs, Content) -> String
-applyTemplates' ([], Just (c, t, p, o))   = "main page" ++ unpack c
-applyTemplates' (path, Just (c, t, p, o)) = "inner page" ++ unpack c
+applyTemplates' :: (Breadcrumbs, Content) -> Text
+applyTemplates' ([], Just (c, t, p, o))   = c
+applyTemplates' (path, Just (c, t, p, o)) = append c c

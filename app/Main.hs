@@ -2,6 +2,7 @@ module Main where
 
 import Builder
 import Files
+import Data.Text
 import System.Directory.Tree
 import System.Environment
 import System.FilePath       (takeExtension)
@@ -10,7 +11,7 @@ main :: IO ()
 main = do
   args <- getArgs
   let args = ["d:\\tmp\\static", "d:\\tmp\\site_output"] --remove when compiling to real .exe
-  let pathInput = head args
+  let pathInput = Prelude.head args
   let pathOutput = args !! 1 --maybe some arg-parsing library later? MissingH?
 
   makeSubstrate pathInput pathOutput

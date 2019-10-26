@@ -8,36 +8,38 @@ module Files
   ) where
 
 import           Parser
-import           CMark                      (commonmarkToHtml, optSmart)
-import           Data.Text                  (Text, pack, unpack)
+import           CMark                 (commonmarkToHtml, optSmart)
+import           Data.Text             (Text, pack, unpack)
 import           System.IO
 import           System.Directory.Tree
-import           System.FilePath            (takeExtension, dropExtension)
-import           Data.Time.Clock            (getCurrentTime)
+import           System.FilePath       (takeExtension, dropExtension)
+import           Data.Time.Clock       (getCurrentTime)
 import qualified Data.ByteString.Lazy  as B
 
 type Content = Maybe (Text, Tags, DatePublished, DateOccured)
 
 --TODO: replace UTF8 funcs with readFile/writeFile of Data.ByteString.Lazy and add conversion to/from encoding of Data.Text.Lazy.Encoding.
 --https://stackoverflow.com/questions/52228705/encoding-and-efficient-io-in-haskell
-writeFileUtf8 :: FilePath -> String -> IO () --TODO: error handling!
+writeFileUtf8 :: FilePath -> Text -> IO () --TODO: error handling!
 writeFileUtf8 f s = do
   h <- openFile f WriteMode
   hSetEncoding h utf8
-  hPutStr h s
+  hPutStr h (unpack s)
   hClose h
 
-readFileUtf8 :: FilePath -> IO String
+readFileUtf8 :: FilePath -> IO Text
 readFileUtf8 f = do
   h <- openFile f ReadMode
   hSetEncoding h utf8
-  hGetContents h
+  c <- hGetContents h
+  return $ pack c
   
 convert :: FilePath -> IO Content
 convert filename = do
   c <- readFileUtf8 filename
-  return $ Just (toHtml c, getTags c, getDatePublished c, getDateOccured c)
-  where toHtml = commonmarkToHtml [optSmart] . pack
+  let c' = unpack c --TODO: remove this dirty hack and rewrite Parser.hs with Text instead of String
+  return $ Just (toHtml c, getTags c', getDatePublished c', getDateOccured c')
+  where toHtml = commonmarkToHtml [optSmart]
 
 convertMd :: FilePath -> IO Content
 convertMd filename

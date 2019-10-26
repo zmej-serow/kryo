@@ -9,8 +9,8 @@ module Parser
   , Breadcrumbs
   ) where
 
-import Data.List       (isPrefixOf, isSuffixOf)
-import Data.Time       (UTCTime, parseTimeOrError, defaultTimeLocale)
+import Data.List (isPrefixOf, isSuffixOf)
+import Data.Time (UTCTime, parseTimeOrError, defaultTimeLocale)
 
 type Tags          = [String]
 type DatePublished = UTCTime
