@@ -2,9 +2,9 @@ module Builder
   ( applyTemplates
   ) where
 
-import           Files     (Content)
-import           Parser
-import qualified Data.Text           as T
+import Files     (Content)
+import Parser
+import Data.Text
 -- type Content = Maybe (Data.Text.Text, Tags, DatePublished, DateOccured)
 -- FilePath isn't really filepath. it's relative: sitename\partition\article.md. Will come as [String] of breadcrumbs, empty if Main page.
 
@@ -19,5 +19,5 @@ applyTemplates :: (FilePath, Content) -> String
 applyTemplates (f, c) = applyTemplates' (splitPath f, c)
 
 applyTemplates' :: (Breadcrumbs, Content) -> String
-applyTemplates' ([], Just (c, t, p, o))   = "main page" ++ T.unpack c
-applyTemplates' (path, Just (c, t, p, o)) = "inner page" ++ T.unpack c
+applyTemplates' ([], Just (c, t, p, o))   = "main page" ++ unpack c
+applyTemplates' (path, Just (c, t, p, o)) = "inner page" ++ unpack c

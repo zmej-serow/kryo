@@ -9,15 +9,17 @@ module Files
 
 import           Parser
 import           CMark                      (commonmarkToHtml, optSmart)
-import qualified Data.Text             as T (Text, pack, unpack)
+import           Data.Text                  (Text, pack, unpack)
 import           System.IO
 import           System.Directory.Tree
 import           System.FilePath            (takeExtension, dropExtension)
 import           Data.Time.Clock            (getCurrentTime)
 import qualified Data.ByteString.Lazy  as B
 
-type Content = Maybe (T.Text, Tags, DatePublished, DateOccured)
+type Content = Maybe (Text, Tags, DatePublished, DateOccured)
 
+--TODO: replace UTF8 funcs with readFile/writeFile of Data.ByteString.Lazy and add conversion to/from encoding of Data.Text.Lazy.Encoding.
+--https://stackoverflow.com/questions/52228705/encoding-and-efficient-io-in-haskell
 writeFileUtf8 :: FilePath -> String -> IO () --TODO: error handling!
 writeFileUtf8 f s = do
   h <- openFile f WriteMode
@@ -35,7 +37,7 @@ convert :: FilePath -> IO Content
 convert filename = do
   c <- readFileUtf8 filename
   return $ Just (toHtml c, getTags c, getDatePublished c, getDateOccured c)
-  where toHtml = commonmarkToHtml [optSmart] . T.pack
+  where toHtml = commonmarkToHtml [optSmart] . pack
 
 convertMd :: FilePath -> IO Content
 convertMd filename
