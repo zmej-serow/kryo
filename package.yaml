@@ -24,6 +24,7 @@ dependencies:
 - text
 - cmark
 - time
+- containers
 - directory-tree
 - filepath
 - bytestring

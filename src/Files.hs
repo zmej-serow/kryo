@@ -4,12 +4,17 @@ module Files
   , makeSubstrate
   , writeFileUtf8
   , readFileUtf8
+  , readTemplates
   , Content
+  , Template
+  , TemplateId
+  , Templates
   ) where
 
 import           Parser
 import           CMark                 (commonmarkToHtml, optSmart)
 import           Data.Text             (Text, pack, unpack)
+import qualified Data.Map.Strict       as Map
 import           System.IO
 import           System.Directory.Tree
 import           System.FilePath       (takeExtension, dropExtension)
@@ -17,6 +22,9 @@ import           Data.Time.Clock       (getCurrentTime)
 import qualified Data.ByteString.Lazy  as B
 
 type Content = Maybe (Text, Tags, DatePublished, DateOccured)
+type Template = Text
+type TemplateId = String
+type Templates = Map.Map TemplateId Template
 
 --TODO: replace UTF8 funcs with readFile/writeFile of Data.ByteString.Lazy and add conversion to/from encoding of Data.Text.Lazy.Encoding.
 --https://stackoverflow.com/questions/52228705/encoding-and-efficient-io-in-haskell
@@ -33,6 +41,9 @@ readFileUtf8 f = do
   hSetEncoding h utf8
   c <- hGetContents h
   return $ pack c
+
+readTemplates :: FilePath -> IO Templates
+readTemplates = undefined
   
 convert :: FilePath -> IO Content
 convert filename = do

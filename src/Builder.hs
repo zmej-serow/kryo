@@ -2,9 +2,10 @@ module Builder
   ( applyTemplates
   ) where
 
-import Files     (Content)
-import Parser
-import Data.Text
+import           Files
+import           Parser
+import           Data.Text
+import qualified Data.Map  as Map
 -- type Content = Maybe (Data.Text.Text, Tags, DatePublished, DateOccured)
 -- FilePath isn't really filepath. it's relative: sitename\partition\article.md. Will come as [String] of breadcrumbs, empty if Main page.
 
@@ -15,8 +16,8 @@ import Data.Text
 -- хедеры всех трёх типов у меня одинаковые. футеры тоже. но оставим возможность делать их разными.
 -- если в тулове раздела есть список -- рендерим его картинками-ссылками.
 
-applyTemplates :: (FilePath, Content) -> Text
-applyTemplates (f, c) = applyTemplates' (splitPath f, c)
+applyTemplates :: Templates -> (FilePath, Content) -> Text
+applyTemplates _ (f, c) = applyTemplates' (splitPath f, c)
 
 applyTemplates' :: (Breadcrumbs, Content) -> Text
 applyTemplates' ([], c)   = mainTemplate c
